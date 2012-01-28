@@ -10,12 +10,12 @@ class DBObject {
 private:
     bool massUpdate;
 protected:
-    bool IsUpdating();
+    bool IsUpdating() { return massUpdate; }
     id_t const id;
 public:
-    id_t getId() const throw();
-    void StartUpdate();
-    void EndUpdate();
+    id_t getId() const throw() { return id; }
+    void StartUpdate() { if (IsUpdating()) EndUpdate(); massUpdate = true; }
+    virtual void EndUpdate() { massUpdate = false; }
 };
 
 template <typename T>
@@ -24,24 +24,11 @@ private:
     bool hasValue;
     T value;
 public:
-    Nullable()
-    : value(T()), hasValue(false)
-    {}
-    Nullable(T const val)
-    : value(val), hasValue(true)
-    {}
-    T getValue() const
-    {
-        return value;
-    }
-    bool HasValue() const
-    {
-        return hasValue;
-    }
-    operator T() const
-    {
-        return value;
-    }
+    Nullable() : value(T()), hasValue(false) {}
+    Nullable(T const val) : value(val), hasValue(true) {}
+    T getValue() const { return value; }
+    bool HasValue() const { return hasValue; }
+    operator T() const { return value; }
     bool operator ==(void *ptr) const
     {
         return (ptr==NULL) && (!hasValue);
@@ -71,6 +58,7 @@ public:
     void setName(std::string const &val);
     void setEmail(std::string const &val);
     void setCapability(unsigned short val);
+    void EndUpdate();
 };
 
 class Teacher : public virtual DBObject {
@@ -88,6 +76,7 @@ public:
     void setEvilness(rank_t val);
     void setExperience(rank_t val);
     void setITSkill(rank_t val);
+    void EndUpdate();
 };
 
 class Subject : public virtual DBObject {
@@ -96,6 +85,7 @@ private:
 public:
     std::string *getLabel() const throw();
     void setLabel(std::string const &val);
+    void EndUpdate();
 };
 
 class Course : public virtual DBObject {
@@ -113,6 +103,7 @@ public:
     void setSubjectId(id_t val);
     void setSubject(Subject const &val);
     void setLevel(rank_t val);
+    void EndUpdate();
 };
 
 #define dowSunday           0x00
@@ -137,6 +128,7 @@ public:
     void setDayOfWeek(char val);
     void setStartTime(double val);
     void setEndTime(double val);
+    void EndUpdate();
 };
 
 #define wkEveryWeek         0x00
@@ -165,6 +157,7 @@ public:
     void setCourse(Course const &val);
     void setRoom(lrank_t val);
     void setWeek(rank_t val);
+    void EndUpdate();
 };
 
 class Skill : public virtual DBObject {
@@ -179,6 +172,7 @@ public:
     void setTeacher(Teacher const &val);
     void setSubjectId(id_t val);
     void setSubject(Subject const &val);
+    void EndUpdate();
 };
 
 class MissingTeacher : public virtual DBObject {
@@ -195,6 +189,7 @@ public:
     void setTeacher(Teacher const &val);
     void setReason(std::string const &val);
     void setDate(long val);
+    void EndUpdate();
 };
 
 class Substitution : public virtual DBObject {
@@ -220,6 +215,7 @@ public:
     void setSubSubject(Subject const &val);
     void setSubRoom(lrank_t val);
     void setNote(std::string const &val);
+    void EndUpdate();
 };
 
 class Class : public virtual DBObject {
@@ -240,6 +236,7 @@ public:
     void setSecClassTeacherId(id_t val);
     void setPrimClassTeacher(Teacher const &val);
     void setSecClassTeacher(Teacher const &val);
+    void EndUpdate();
 };
 
 class Student : public virtual DBObject {
@@ -256,6 +253,7 @@ public:
     void setLevel(rank_t val);
     void setClassId(id_t val);
     void setClass(Class const &val);
+    void EndUpdate();
 };
 
 class ClassLesson : public virtual DBObject {
@@ -266,6 +264,7 @@ public:
     id_t getClassId() const throw();
     Course *getCourse() const;
     Class *getClass() const;
+    void EndUpdate();
 };
 
 class StudentLesson : public virtual DBObject {
@@ -276,4 +275,5 @@ public:
     id_t getStudentId() const throw();
     Course *getCourse() const;
     Student *getStudent() const;
+    void EndUpdate();
 };
