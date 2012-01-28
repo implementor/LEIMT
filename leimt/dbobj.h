@@ -1,3 +1,5 @@
+#ifndef _dbobj_h_
+#define _dbobj_h_
 #include <string>
 
 /*  LEIMT Datebase Bindings  */
@@ -97,7 +99,7 @@ public:
     Teacher *getTeacher() const;
     id_t getSubjectId() const throw();
     Subject *getSubject() const;
-    rank_t getLevel() const;
+    rank_t getLevel() const throw();
     void setTeacherId(id_t val);
     void setTeacher(Teacher const &val);
     void setSubjectId(id_t val);
@@ -116,7 +118,7 @@ public:
 
 class Timespan : public virtual DBObject {
 private:
-    std::string label;
+    std::string *label;
     char dayOfWeek;
     double startTime, endTime;
 public:
@@ -178,7 +180,7 @@ public:
 class MissingTeacher : public virtual DBObject {
 private:
     id_t teacher;
-    std::string reason;
+    std::string *reason;
     long date;
 public:
     id_t getTeacherId() const throw();
@@ -197,7 +199,7 @@ private:
     Nullable<id_t> origLesson, subTeacher;
     id_t subSubject;
     lrank_t subRoom;
-    std::string note;
+    std::string *note;
 public:
     Nullable<id_t> getOrigLessonId() const throw();
     Lesson *getOrigLesson() const;
@@ -220,7 +222,7 @@ public:
 
 class Class : public virtual DBObject {
 private:
-    std::string label;
+    std::string *label;
     rank_t level;
     id_t primClassTeacher, secClassTeacher;
 public:
@@ -241,13 +243,13 @@ public:
 
 class Student : public virtual DBObject {
 private:
-    std::string name;
+    std::string *name;
     rank_t level;
-    id_t classid;
+    Nullable<id_t> classid;
 public:
     std::string *getName() const throw();
     rank_t getLevel() const throw();
-    id_t getClassId() const throw();
+    Nullable<id_t> getClassId() const throw();
     Class *getClass() const;
     void setName(std::string const &val);
     void setLevel(rank_t val);
@@ -277,3 +279,5 @@ public:
     Student *getStudent() const;
     void EndUpdate();
 };
+
+#endif

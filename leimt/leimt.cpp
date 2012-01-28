@@ -7,6 +7,7 @@
 
 leimt::leimt()
 {
+    User u();
     QLabel* l = new QLabel( this );
     l->setText( "Hello World!" );
     setCentralWidget( l );
