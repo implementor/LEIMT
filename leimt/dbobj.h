@@ -280,4 +280,21 @@ public:
     void EndUpdate();
 };
 
+class DBMan {
+public:
+    static User getUser(id_t id);
+    static Teacher getTeacher(id_t id);
+    static Subject getSubject(id_t id);
+    static Course getCourse(id_t id);
+    static Timespan getTimespan(id_t id);
+    static Lesson getLesson(id_t id);
+    static Skill getSkill(id_t id);
+    static MissingTeacher getMissingTeacher(id_t id);
+    static Substitution getSubstitution(id_t id);
+    static Class getClass(id_t id);
+    static Student getStudent(id_t id);
+    static ClassLesson getClassLesson(id_t id);
+    static StudentLesson getStudentLesson(id_t id);
+};
+
 #endif
